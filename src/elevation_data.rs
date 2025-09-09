@@ -3,7 +3,7 @@ use image::Rgb;
 use std::path::Path;
 
 /// Maximum Y coordinate in Minecraft (build height limit)
-const MAX_Y: i32 = 319;
+const MAX_Y: i32 = 4064;
 /// Scale factor for converting real elevation to Minecraft heights
 const BASE_HEIGHT_SCALE: f64 = 0.7;
 /// AWS S3 Terrarium tiles endpoint (no API key required)
