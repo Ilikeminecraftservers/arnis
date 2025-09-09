@@ -31,7 +31,7 @@ pub fn generate_bridges(editor: &mut WorldEditor, element: &ProcessedWay) {
 
                 // Place bridge blocks
                 for dx in -2..=2 {
-                    editor.set_block(LIGHT_GRAY_CONCRETE, *x + dx, height as i32, *z, None, None);
+                    editor.set_block(BLUE_ICE, *x + dx, height as i32, *z, None, None);
                 }
             }
         }
