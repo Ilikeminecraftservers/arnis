@@ -17,7 +17,7 @@ pub fn generate_highways(editor: &mut WorldEditor, element: &ProcessedElement, a
                 for dy in 2..=4 {
                     editor.set_block(OAK_FENCE, x, dy, z, None, None);
                 }
-                editor.set_block(GLOWSTONE, x, 5, z, None, None);
+                editor.set_block(SEALANTERN, x, 5, z, None, None);
             }
         } else if highway_type == "crossing" {
             // Handle traffic signals for crossings
