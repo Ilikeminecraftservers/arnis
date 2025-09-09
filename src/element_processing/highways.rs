@@ -46,8 +46,8 @@ pub fn generate_highways(editor: &mut WorldEditor, element: &ProcessedElement, a
                     editor.set_block(COBBLESTONE_WALL, x, dy, z, None, None);
                 }
 
-                editor.set_block(WHITE_WOOL, x, 4, z, None, None);
-                editor.set_block(WHITE_WOOL, x + 1, 4, z, None, None);
+                editor.set_block(ICE_BLOCK, x, 4, z, None, None);
+                editor.set_block(ICE_BLOCK, x + 1, 4, z, None, None);
             }
         } else if element
             .tags()
@@ -64,16 +64,16 @@ pub fn generate_highways(editor: &mut WorldEditor, element: &ProcessedElement, a
             // Determine the block type based on the 'surface' tag
             if let Some(surface) = element.tags().get("surface") {
                 surface_block = match surface.as_str() {
-                    "paving_stones" | "sett" => STONE_BRICKS,
+                    "paving_stones" | "sett" => BLUE_ICE,
                     "bricks" => BRICK,
                     "wood" => OAK_PLANKS,
-                    "asphalt" => BLACK_CONCRETE,
+                    "asphalt" => BLUE_ICE,
                     "gravel" | "fine_gravel" => GRAVEL,
                     "grass" => GRASS_BLOCK,
                     "dirt" | "ground" | "earth" => DIRT,
                     "sand" => SAND,
                     "concrete" => LIGHT_GRAY_CONCRETE,
-                    _ => STONE, // Default to stone for unknown surfaces
+                    _ => BLUE_ICE, // Default stone for unknown surfaces
                 };
             }
 
@@ -123,12 +123,14 @@ pub fn generate_highways(editor: &mut WorldEditor, element: &ProcessedElement, a
                 "motorway" | "primary" => {
                     block_range = 5;
                     add_stripe = true;
+                    block_type = BLUE_ICE
                 }
                 "tertiary" => {
                     add_stripe = true;
                 }
                 "track" => {
                     block_range = 1;
+                    block_type = BLUE_ICE
                 }
                 "service" => {
                     block_type = GRAY_CONCRETE;
@@ -136,7 +138,7 @@ pub fn generate_highways(editor: &mut WorldEditor, element: &ProcessedElement, a
                 }
                 "secondary_link" | "tertiary_link" => {
                     //Exit ramps, sliproads
-                    block_type = BLACK_CONCRETE;
+                    block_type = BLUE_ICE;
                     block_range = 1;
                 }
                 "escape" => {
@@ -207,16 +209,16 @@ pub fn generate_highways(editor: &mut WorldEditor, element: &ProcessedElement, a
                                     if is_horizontal {
                                         if set_x % 2 < 1 {
                                             editor.set_block(
-                                                WHITE_CONCRETE,
+                                                ICE_BLOCK,
                                                 set_x,
                                                 0,
                                                 set_z,
-                                                Some(&[BLACK_CONCRETE]),
+                                                Some(&[BLUE_ICE]),
                                                 None,
                                             );
                                         } else {
                                             editor.set_block(
-                                                BLACK_CONCRETE,
+                                                BLUE_ICE,
                                                 set_x,
                                                 0,
                                                 set_z,
@@ -226,16 +228,16 @@ pub fn generate_highways(editor: &mut WorldEditor, element: &ProcessedElement, a
                                         }
                                     } else if set_z % 2 < 1 {
                                         editor.set_block(
-                                            WHITE_CONCRETE,
+                                            ICE_BLOCK,
                                             set_x,
                                             0,
                                             set_z,
-                                            Some(&[BLACK_CONCRETE]),
+                                            Some(&[BLUE_ICE]),
                                             None,
                                         );
                                     } else {
                                         editor.set_block(
-                                            BLACK_CONCRETE,
+                                            BLUE_ICE,
                                             set_x,
                                             0,
                                             set_z,
@@ -250,7 +252,7 @@ pub fn generate_highways(editor: &mut WorldEditor, element: &ProcessedElement, a
                                         0,
                                         set_z,
                                         None,
-                                        Some(&[BLACK_CONCRETE, WHITE_CONCRETE]),
+                                        Some(BLUE_ICE&, ICE_BLOCK]),
                                     );
                                 }
                             }
@@ -263,7 +265,7 @@ pub fn generate_highways(editor: &mut WorldEditor, element: &ProcessedElement, a
                                 let outline_x = x - block_range - 1;
                                 let outline_z = z + dz;
                                 editor.set_block(
-                                    LIGHT_GRAY_CONCRETE,
+                                    BLUE_ICE,
                                     outline_x,
                                     0,
                                     outline_z,
@@ -276,7 +278,7 @@ pub fn generate_highways(editor: &mut WorldEditor, element: &ProcessedElement, a
                                 let outline_x = x + block_range + 1;
                                 let outline_z = z + dz;
                                 editor.set_block(
-                                    LIGHT_GRAY_CONCRETE,
+                                    BLUE_ICE,
                                     outline_x,
                                     0,
                                     outline_z,
@@ -292,11 +294,11 @@ pub fn generate_highways(editor: &mut WorldEditor, element: &ProcessedElement, a
                                 let stripe_x: i32 = x;
                                 let stripe_z: i32 = z;
                                 editor.set_block(
-                                    WHITE_CONCRETE,
+                                    ICE_BLOCK,
                                     stripe_x,
                                     0,
                                     stripe_z,
-                                    Some(&[BLACK_CONCRETE]),
+                                    Some(&[BLUE_ICE]),
                                     None,
                                 );
                             }
@@ -335,7 +337,7 @@ pub fn generate_siding(editor: &mut WorldEditor, element: &ProcessedWay) {
             );
 
             for (bx, _, bz) in bresenham_points {
-                if !editor.check_for_block(bx, 0, bz, Some(&[BLACK_CONCRETE, WHITE_CONCRETE])) {
+                if !editor.check_for_block(bx, 0, bz, Some(&[BLUE_ICE, ICE_BLOCK])) {
                     editor.set_block(siding_block, bx, 1, bz, None, None);
                 }
             }
@@ -348,7 +350,7 @@ pub fn generate_siding(editor: &mut WorldEditor, element: &ProcessedWay) {
 /// Generates an aeroway
 pub fn generate_aeroway(editor: &mut WorldEditor, way: &ProcessedWay, args: &Args) {
     let mut previous_node: Option<(i32, i32)> = None;
-    let surface_block = LIGHT_GRAY_CONCRETE;
+    let surface_block = BLUE_ICE;
 
     for node in &way.nodes {
         if let Some(prev) = previous_node {
